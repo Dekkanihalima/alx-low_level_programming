@@ -28,7 +28,7 @@ void print_all(const char * const format, ...)
 				case 'f':
 					printf("%s%f", sep, va_arg(list, double));
 					break;
-				case's':
+				case 's':
 					str = va_arg(list, char *);
 					if (!str)
 						str = "(nil)";
@@ -38,7 +38,7 @@ void print_all(const char * const format, ...)
 					i++;
 					continue;
 			}
-			sep = " , ";
+			sep = ", ";
 			i++;
 		}
 	}
