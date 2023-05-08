@@ -1,53 +1,42 @@
-#include <unistd.h>
-#include <fcntl.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include "main.h"
 
 /**
- * read_textfile - reads a text file and prints it to standard output
- * @filename: name of the file to read
- * @letters: maximum number of letters to read
- * Return: number of letters read and printed, or 0 on failure
+ * read_textfile - that reads a text file and prints
+ * @filename: variable pointer
+ * @letters: size letters
+ * Description: Write a function that reads a text file and prints it
+ * to the POSIX standard output.
+ * Return: the actual number of letters it could read and print, 0 otherwise
  */
+
 ssize_t read_textfile(const char *filename, size_t letters)
 {
-    int file;
-    ssize_t let, w;
-    char *text;
+	ssize_t file, letter, response;
+	char *text;
 
-    if (filename == NULL)
-        return (0);
+	text = malloc(letters);
+	if (text == NULL)
+		return (0);
 
-    text = malloc(sizeof(char) * (letters + 1));
-    if (text == NULL)
-        return (0);
+	if (filename == NULL)
+		return (0);
 
-    file = open(filename, O_RDONLY);
-    if (file == -1)
-    {
-        free(text);
-        return (0);
-    }
+	file = open(filename, O_RDONLY);
 
-    let = read(file, text, letters);
-    if (let == -1)
-    {
-        free(text);
-        close(file);
-        return (0);
-    }
+	if (file == -1)
+	{
+		free(text);
+		return (0);
+	}
 
-    w = write(STDOUT_FILENO, text, let);
-    if (w == -1 || w != let)
-    {
-        free(text);
-        close(file);
-        return (0);
-    }
+	letter = read(file, text, letters);
 
-    free(text);
-    close(file);
+	response = write(STDOUT_FILENO, text, letter);
 
-    return (let);
+	close(file);
+
+	return (response);
 }
 
