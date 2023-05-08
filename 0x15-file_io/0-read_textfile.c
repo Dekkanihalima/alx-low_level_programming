@@ -10,33 +10,30 @@
  * to the POSIX standard output.
  * Return: the actual number of letters it could read and print, 0 otherwise
  */
-
 ssize_t read_textfile(const char *filename, size_t letters)
 {
-	ssize_t file, letter, response;
-	char *text;
-
-	text = malloc(letters);
-	if (text == NULL)
-		return (0);
+	ssize_t file, rd, wt;
+	char *buffer;
 
 	if (filename == NULL)
 		return (0);
 
-	file = open(filename, O_RDONLY);
+	buffer = malloc(sizeof(char) * letters);
+	if (buffer == NULL)
+		return (0);
 
-	if (file == -1)
+	file = open(filename, O_RDONLY);
+	rd = read(file, buffer, letters);
+	wt = write(STDOUT_FILENO, buffer, rd);
+
+	if (file == -1 || rd == -1 || wt == -1 || wt != rd)
 	{
-		free(text);
+		free(buffer);
 		return (0);
 	}
 
-	letter = read(file, text, letters);
-
-	response = write(STDOUT_FILENO, text, letter);
-
+	free(buffer);
 	close(file);
 
-	return (response);
+	return (wt);
 }
-
